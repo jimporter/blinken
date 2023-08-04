@@ -9,6 +9,12 @@
 #include "ztimer.h"
 #include "periph/pwm.h"
 
+bool on = true;
+
+void btn_cb(void*) {
+  on = !on;
+}
+
 int main(void) {
   if(pwm_init(PWM_DEV(0), PWM_LEFT, 1000, 255) == 0) {
     printf("failed to initialize PWM\n");
@@ -22,7 +28,16 @@ int main(void) {
   color_hsv_t ds_color = { 0.0, 1.0, 1.0 };
   color_rgba_t ds_led = {{0, 0, 0}, 32};
 
+  gpio_init_int(BTN0_PIN, BTN0_MODE, GPIO_RISING, btn_cb, NULL);
+
   while(true) {
+    if(!on) {
+      pwm_set(PWM_DEV(0), 0, 0);
+      color_rgba_t blank = {{0, 0, 0}, 0};
+      apa102_load_rgba(&dotstar, &blank);
+      continue;
+    }
+
     red_led += delta;
     if(red_led == 64)
       delta = -1;

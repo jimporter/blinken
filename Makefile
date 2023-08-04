@@ -7,6 +7,7 @@ EXTERNAL_BOARD_DIRS += $(CURDIR)/boards
 
 USEMODULE += apa102
 USEMODULE += color
+USEMODULE += periph_gpio_irq
 USEMODULE += periph_pwm
 USEMODULE += ztimer_usec
 
